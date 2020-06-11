@@ -1,0 +1,57 @@
+[
+  {
+    "name": "dfektlan.no",
+    "repo": "kradalby/dfektlan.no",
+    "namespace": "dfektlan"
+  },
+  {
+    "name": "flexiday",
+    "repo": "kradalby/flexiday",
+    "namespace": "flexiday"
+  },
+  {
+    "name": "glossary",
+    "repo": "kradalby/glossary",
+    "namespace": "glossary"
+  },
+  {
+    "name": "gso",
+    "repo": "kradalby/gso",
+    "namespace": "gso"
+  },
+  {
+    "name": "hugin",
+    "repo": "kradalby/hugin",
+    "namespace": "hugin"
+  },
+  {
+    "name": "lilsnitch",
+    "repo": "kradalby/lilsnitch",
+    "namespace": "lilsnitch"
+  },
+  {
+    "name": "map.kradalby.no",
+    "repo": "kradalby/map.kradalby.no",
+    "namespace": "map"
+  },
+  {
+    "name": "presentations",
+    "repo": "kradalby/presentations",
+    "namespace": "presentations"
+  },
+  {
+    "name": "resume",
+    "repo": "kradalby/resume",
+    "namespace": "resume"
+  },
+  {
+    "name": "sourceapi",
+    "repo": "kradalby/sourceapi",
+    "namespace": "sourceapi"
+  },
+  {
+    "name": "webpage",
+    "repo": "kradalby/webpage",
+    "namespace": "webpage"
+  }
+]
