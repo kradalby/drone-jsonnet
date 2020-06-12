@@ -28,19 +28,19 @@ done
 # Special cases
 if [ "$ACTION" == "rm" ]; then
 
-    drone secret rm --repository "kradalby/hugin" --name kubernetes_server
-    drone secret rm --repository "kradalby/hugin" --name kubernetes_cert
-    drone secret rm --repository "kradalby/hugin" --name kubernetes_token
+    drone secret rm --repository "kradalby/hugin" --name demo_kubernetes_server
+    drone secret rm --repository "kradalby/hugin" --name demo_kubernetes_cert
+    drone secret rm --repository "kradalby/hugin" --name demo_kubernetes_token
 
-    drone secret rm kradalby/packer --name vcenter_password --data $VCENTER_PASSWORD
-    drone secret rm kradalby/packer --name vcenter_login --data $VCENTER_LOGIN
-    drone secret rm kradalby/packer --name vcenter_host --data $VCENTER_HOST
+    drone secret rm kradalby/packer --name vcenter_password --data "$VCENTER_PASSWORD"
+    drone secret rm kradalby/packer --name vcenter_login --data "$VCENTER_LOGIN"
+    drone secret rm kradalby/packer --name vcenter_host --data "$VCENTER_HOST"
 
 elif [ "$ACTION" == "add" ]; then
     HUGINDEMO_DRONE=$(kubespace drone -n hugindemo -r kradalby/hugin)
     echo "${HUGINDEMO_DRONE//kubernetes/demo_kubernetes}" | bash
 
-    drone secret add kradalby/packer --name vcenter_password --data $VCENTER_PASSWORD
-    drone secret add kradalby/packer --name vcenter_login --data $VCENTER_LOGIN
-    drone secret add kradalby/packer --name vcenter_host --data $VCENTER_HOST
+    drone secret add kradalby/packer --name vcenter_password --data "$VCENTER_PASSWORD"
+    drone secret add kradalby/packer --name vcenter_login --data "$VCENTER_LOGIN"
+    drone secret add kradalby/packer --name vcenter_host --data "$VCENTER_HOST"
 fi

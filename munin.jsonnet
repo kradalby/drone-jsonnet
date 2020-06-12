@@ -5,18 +5,29 @@ local step = pipeline.step;
 local fap = drone.fap;
 
 [
-  pipeline.newMacOS(
-    name='MacOS',
-  ).withSteps(
+  pipeline.newMacOS()
+  .withSteps(
     [
+      step.new('Ensure tooling')
+      .withEnv({
+        PATH: fap.variables.path.macos,
+      })
+      .withCommands([
+        'brew bundle',
+      ]),
       step.new('Lint')
+      .withEnv({
+        PATH: fap.variables.path.macos,
+      })
       .withCommands([
         'make lint',
       ]),
 
       step.new('Build')
+      .withEnv({
+        PATH: fap.variables.path.macos,
+      })
       .withCommands([
-        'brew bundle',
         'make build',
       ]),
 
@@ -27,6 +38,9 @@ local fap = drone.fap;
       .withWhen(fap.when.master),
 
       step.new('Publish')
+      .withEnv({
+        PATH: fap.variables.path.macos,
+      })
       .withCommands([
         'make publish',
       ])

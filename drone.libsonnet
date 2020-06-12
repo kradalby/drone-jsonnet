@@ -1,4 +1,16 @@
 local droneStatus = ['success', 'failure'];
+local MACOS_PATH = [
+  '/usr/local/opt/coreutils/libexec/gnubin',
+  '/usr/local/opt/ruby/bin',
+  '/usr/local/opt/gnu-tar/libexec/gnubin',
+  '/usr/local/opt/gnu-sed/bin',
+  '/usr/local/bin',
+  '/usr/bin',
+  '/bin',
+  '/usr/sbin',
+  '/sbin',
+  '/usr/local/share/dotnet',
+];
 
 local base = {
   platform(os, arch): {
@@ -175,6 +187,11 @@ local fap = {
     local w = pipeline.when,
     master: w.withBranch('master').withEvent('push'),
     exclude: w.new() + { branch: { exclude: ['master'] } },
+  },
+  variables:: {
+    path: {
+      macos: std.join(':', MACOS_PATH),
+    },
   },
   step:: {
     discord:
