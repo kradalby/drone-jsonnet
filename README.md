@@ -17,4 +17,4 @@ follow the a convention of:
 
 `kubernetes.json` contains mappings between repos and namespaces so the correct
 namespaces can be queried for secrets. Namespaces is managed by
-`[kubespace](https://github.com/kradalby/kubespace)`.
+[`kubespace`](https://github.com/kradalby/kubespace).
