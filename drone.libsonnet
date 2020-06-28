@@ -307,6 +307,13 @@ local fap = {
         repo: repo,
       }),
 
+    github_pages_publish(directory=''):
+      step.new('Publish to GitHub Pages', 'plugins/gh-pages')
+      .withWhen(fap.when.master)
+      .withSettings({
+        pages_directory: directory,
+      }),
+
     terraform_lint:
       step.new('Lint', 'wata727/tflint')
       .withCommands([
