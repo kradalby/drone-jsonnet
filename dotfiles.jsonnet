@@ -15,10 +15,14 @@ local fap = drone.fap;
       })
       .withCommands([
         'pwd',
+        'echo $PATH',
         'apt update',
-        'apt install -y vim git curl tar xz-utils',
+        'apt install -y neovim git curl tar xz-utils',
         'curl -sL https://deb.nodesource.com/setup_10.x | bash -',
-        'apt install -y nodejs yarnpkg',
+        'curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -',
+        'echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list',
+        'apt update',
+        'apt install -y nodejs yarn',
 
         // Install VS Code',
         'curl -o vscode.deb -J -L https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable',
@@ -34,10 +38,17 @@ local fap = drone.fap;
         'cd ~',
 
         // Vim
-        'curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim',
-        'cp ~/git/dotfiles/rc/vimrc ~/.vimrc',
-        'which yarn',
-        'vim +"PlugInstall --sync" +qa > /dev/null',
+        // 'curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim',
+        // 'cp ~/git/dotfiles/rc/vimrc ~/.vimrc',
+        // 'which yarn',
+        // 'vim +"PlugInstall --sync" +qa > /dev/null',
+
+        // Neovim
+        'sh -c \'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim\'',
+        'mkdir -p ~/.config/nvim',
+        'cp ~/git/dotfiles/rc/vimrc ~/.config/nvim/init.vim',
+        'nvim --headless +"PlugInstall --sync" +qa',
+
 
         // VS Code
         'cat /drone/src/vscode.txt | xargs -L1 code --user-data-dir $HOME --install-extension',
