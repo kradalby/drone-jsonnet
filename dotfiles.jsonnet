@@ -37,6 +37,9 @@ local fap = drone.fap;
         // 'export DISPLAY=":9.0"',
         'cd ~',
 
+        // VS Code
+        'cat /drone/src/vscode.txt | xargs -L1 code --user-data-dir $HOME --install-extension',
+
         // Vim
         // 'curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim',
         // 'cp ~/git/dotfiles/rc/vimrc ~/.vimrc',
@@ -50,12 +53,10 @@ local fap = drone.fap;
         'nvim --headless +"PlugInstall --sync" +qa',
 
 
-        // VS Code
-        'cat /drone/src/vscode.txt | xargs -L1 code --user-data-dir $HOME --install-extension',
-
         // Ship it
         'mkdir -p /drone/src/dist',
         'tar -cJf /drone/src/dist/dotfiles.tar.xz .vim git .vscode/extensions',
+        // 'tar -cJf /drone/src/dist/dotfiles.tar.xz .vim git',
       ]),
       fap.step.deploy_builds('/storage/nfs/k8s/builds/dotfiles'),
       fap.step.discord,
