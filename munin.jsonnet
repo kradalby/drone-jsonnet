@@ -8,7 +8,7 @@ local fap = drone.fap;
   pipeline.newMacOS()
   .withSteps(
     [
-      step.new('Ensure tooling')
+      step.new('Ensure tooling and deps')
       .withEnv({
         PATH: fap.variables.path.macos,
       })
@@ -29,6 +29,14 @@ local fap = drone.fap;
       })
       .withCommands([
         'make build',
+      ]),
+
+      step.new('Build cross-platform')
+      .withEnv({
+        PATH: fap.variables.path.macos,
+      })
+      .withCommands([
+        'make build-cross',
       ]),
 
       step.new('Install on local system')
