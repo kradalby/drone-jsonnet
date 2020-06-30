@@ -55,8 +55,9 @@ local fap = drone.fap;
 
         // Ship it
         'mkdir -p /drone/src/dist',
-        'tar -cJf /drone/src/dist/dotfiles.tar.xz .vim git .vscode/extensions',
-        // 'tar -cJf /drone/src/dist/dotfiles.tar.xz .vim git',
+        'tar -cJf /drone/src/dist/dotfiles.tar.xz git',
+        'tar -cJf /drone/src/dist/vim.tar.xz .vim',
+        'tar -cJf /drone/src/dist/vscode_extensions.tar.xz .vscode/extensions',
       ]),
       fap.step.deploy_builds('/storage/nfs/k8s/builds/dotfiles'),
       fap.step.discord,
