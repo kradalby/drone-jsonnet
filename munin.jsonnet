@@ -5,6 +5,18 @@ local step = pipeline.step;
 local fap = drone.fap;
 
 [
+  pipeline.newKubernetes()
+  .withSteps(
+    [
+      // fap.step.golint,
+      fap.step.swift(['libgd-dev', 'libexif-dev']),
+      fap.step.deploy_builds('/storage/nfs/k8s/builds/munin'),
+      fap.step.discord,
+    ]
+  ),
+  fap.secret.discord.id,
+  fap.secret.discord.token,
+  fap.secret.ssh.deploy,
   pipeline.newMacOS()
   .withSteps(
     [
