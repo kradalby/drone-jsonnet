@@ -204,7 +204,32 @@ local fap = {
         webhook_token: {
           from_secret: 'discord_webhook_token',
         },
-        message: '{{#success build.status}} ✅  Build #{{build.number}} of `{{repo.name}}` succeeded.\n\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n``` {{commit.message}} ```\n🌐 {{ build.link }}\n\n ✅ duration: {{duration build.started build.finished}} \n\n ✅ started: {{datetime build.started "2006/01/02 15:04" "UTC"}} \n\n ✅ finished: {{datetime build.finished "2006/01/02 15:04" "UTC"}} {{else}} ❌  Build #{{build.number}} of `{{repo.name}}` failed.\n\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n``` {{commit.message}} ```\n🌐 {{ build.link }}\n\n ✅ duration: {{duration build.started build.finished}} \n\n ✅ started: {{datetime build.started "2006/01/02 15:04" "UTC"}} \n\n ✅ finished: {{datetime build.finished "2006/01/02 15:04" "UTC"}}{{/success}}\n',
+        message: |||
+          {{#success build.status}}
+          ✅  Build #{{build.number}} of `{{repo.name}}` succeeded.
+
+          📝  Commit by {{commit.author}} on `{{commit.branch}}`:
+          ``` {{commit.message}} ```
+          🌐  {{ build.link }}
+
+          ✅  duration: {{duration build.started build.finished}}
+          ✅  started: {{datetime build.started "2006/01/02 15:04" "UTC"}}
+          ✅  finished: {{datetime build.finished "2006/01/02 15:04" "UTC"}}
+
+          {{else}}
+          @everyone
+          ❌  Build #{{build.number}} of `{{repo.name}}` failed.
+
+          📝  Commit by {{commit.author}} on `{{commit.branch}}`:
+          ``` {{commit.message}} ```
+          🌐  {{ build.link }}
+
+          ✅  duration: {{duration build.started build.finished}}
+          ✅  started: {{datetime build.started "2006/01/02 15:04" "UTC"}}
+          ✅  finished: {{datetime build.finished "2006/01/02 15:04" "UTC"}}
+
+          {{/success}}
+        |||,
       }),
 
     email:
@@ -229,6 +254,19 @@ local fap = {
       .withCommands([
         'golangci-lint run -v --timeout 10m',
       ]),
+
+    swift(packages=[],):
+      step.new('Swift build', 'swift:latest')
+      .withCommands(
+        (if packages != [] then
+           [
+             'apt update',
+             'apt install -y %s' % std.join(' ', packages),
+           ] else [])
+        + [
+          'make build',
+        ]
+      ),
 
     deploy_builds(path=''):
       step.new('Deploy to builds', 'appleboy/drone-scp')
