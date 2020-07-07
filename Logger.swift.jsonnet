@@ -9,7 +9,7 @@ local fap = drone.fap;
   .withSteps(
     [
       // fap.step.golint,
-      fap.step.swift([]),
+      fap.step.swift_build(packages=[]),
       fap.step.discord,
     ]
   ),

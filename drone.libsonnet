@@ -255,16 +255,36 @@ local fap = {
         'golangci-lint run -v --timeout 10m',
       ]),
 
-    swift(packages=[],):
-      step.new('Swift build', 'swift:latest')
+    swift_build(packages=[], image='swift:latest'):
+      step.new('Swift build', image)
       .withCommands(
         (if packages != [] then
            [
              'apt update',
              'apt install -y %s' % std.join(' ', packages),
            ] else [])
-        + [
+        +
+        [
+          'make test',
           'make build',
+        ]
+      ),
+
+    swift_release(packages=[], name='', image='swift:latest'):
+      step.new('Swift release', image)
+      .withWhen(fap.when.master)
+      .withCommands(
+        (if packages != [] then
+           [
+             'apt update',
+             'apt install -y %s' % std.join(' ', packages),
+           ] else [])
+        +
+        [
+          'make test',
+          'make build-release',
+          'mkdir -p dist/',
+          'mv .build/release/%s dist/' % name,
         ]
       ),
 

@@ -4,13 +4,18 @@ local pipeline = base.pipeline;
 local step = pipeline.step;
 local fap = drone.fap;
 
+local packages = ['libexif-dev', 'libgd-dev', 'libiptcdata0-dev'];
+
 [
   pipeline.newKubernetes()
   .withSteps(
     [
       // fap.step.golint,
-      fap.step.swift(['libgd-dev', 'libexif-dev']),
-      fap.step.deploy_builds('/storage/nfs/k8s/builds/munin'),
+      fap.step.swift_build(packages=[], image='kradalby/swift:groovy'),
+      fap.step.swift_release(packages=[],
+                             name='munin',
+                             image='kradalby/swift:groovy'),
+      fap.step.deploy_builds('/storage/nfs/k8s/builds/munin/linux_x64'),
       fap.step.discord,
     ]
   ),
@@ -40,7 +45,7 @@ local fap = drone.fap;
         PATH: fap.variables.path.macos,
       })
       .withCommands([
-        'make build',
+        'make build-release',
       ]),
 
       step.new('Build cross-platform')
@@ -53,7 +58,7 @@ local fap = drone.fap;
 
       step.new('Install on local system')
       .withCommands([
-        'cp ./.build/x86_64-apple-macosx/debug/munin /Users/kradalby/bin/.',
+        'cp ./.build/release/munin /Users/kradalby/bin/.',
       ])
       .withWhen(fap.when.master),
 
