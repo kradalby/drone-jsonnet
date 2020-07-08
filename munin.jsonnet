@@ -7,20 +7,29 @@ local fap = drone.fap;
 local packages = ['libexif-dev', 'libgd-dev', 'libiptcdata0-dev'];
 
 [
-  pipeline.newKubernetes()
+  pipeline.newKubernetes(name='Docker build')
   .withSteps(
     [
-      // fap.step.golint,
+      fap.step.docker_build,
+      fap.step.docker_publish('kradalby/munin'),
+      fap.step.discord,
+    ]
+  ),
+  pipeline.newKubernetes(name='Swift build')
+  .withSteps(
+    [
       fap.step.swift_build(packages=[], image='kradalby/swift:groovy'),
       fap.step.swift_release(packages=[],
                              name='munin',
                              image='kradalby/swift:groovy'),
-      fap.step.deploy_builds('/storage/nfs/k8s/builds/munin/linux_x64'),
+      // fap.step.deploy_builds('/storage/nfs/k8s/builds/munin/linux_x64'),
       fap.step.discord,
     ]
   ),
   fap.secret.discord.id,
   fap.secret.discord.token,
+  fap.secret.docker.username,
+  fap.secret.docker.password,
   fap.secret.ssh.deploy,
   pipeline.newMacOS()
   .withSteps(
