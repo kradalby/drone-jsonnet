@@ -22,7 +22,7 @@ local packages = ['libexif-dev', 'libgd-dev', 'libiptcdata0-dev'];
       fap.step.swift_release(packages=[],
                              name='munin',
                              image='kradalby/swift:groovy'),
-      // fap.step.deploy_builds('/storage/nfs/k8s/builds/munin/linux_x64'),
+      fap.step.deploy_builds('/storage/serve/builds/munin/linux_x64'),
       fap.step.discord,
     ]
   ),

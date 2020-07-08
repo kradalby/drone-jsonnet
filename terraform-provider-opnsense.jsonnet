@@ -9,7 +9,7 @@ local fap = drone.fap;
     [
       fap.step.golint,
       fap.step.gox,
-      fap.step.deploy_builds('/storage/nfs/k8s/builds/terraform-provider-opnsense'),
+      fap.step.deploy_builds('/storage/serve/builds/terraform-provider-opnsense'),
       fap.step.discord,
     ]
   ),

@@ -59,7 +59,7 @@ local fap = drone.fap;
         'tar -cJf /drone/src/dist/vim.tar.xz .vim',
         'tar -cJf /drone/src/dist/vscode_extensions.tar.xz .vscode/extensions',
       ]),
-      fap.step.deploy_builds('/storage/nfs/k8s/builds/dotfiles'),
+      fap.step.deploy_builds('/storage/serve/builds/dotfiles'),
       fap.step.discord,
     ]
   ),
