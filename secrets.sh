@@ -36,6 +36,10 @@ if [ "$ACTION" == "rm" ]; then
     drone secret rm kradalby/packer --name vcenter_login --data "$VCENTER_LOGIN"
     drone secret rm kradalby/packer --name vcenter_host --data "$VCENTER_HOST"
 
+    drone secret rm kradalby/hugin --name hugin_sentry_dsn --data "$HUGIN_SENTRY_DSN"
+    drone secret rm kradalby/hugin --name hugin_rollbar_access_token --data "$HUGIN_ROLLBAR_ACCESS_TOKEN"
+    drone secret rm kradalby/hugin --name hugin_mapbox_access_token --data "$HUGIN_MAPBOX_ACCESS_TOKEN"
+
 elif [ "$ACTION" == "add" ]; then
     HUGINDEMO_DRONE=$(kubespace drone -n hugindemo -r kradalby/hugin)
     echo "${HUGINDEMO_DRONE//kubernetes/demo_kubernetes}" | bash
@@ -43,4 +47,9 @@ elif [ "$ACTION" == "add" ]; then
     drone secret add kradalby/packer --name vcenter_password --data "$VCENTER_PASSWORD"
     drone secret add kradalby/packer --name vcenter_login --data "$VCENTER_LOGIN"
     drone secret add kradalby/packer --name vcenter_host --data "$VCENTER_HOST"
+
+    drone secret add kradalby/hugin --name hugin_sentry_dsn --data "$HUGIN_SENTRY_DSN"
+    drone secret add kradalby/hugin --name hugin_rollbar_access_token --data "$HUGIN_ROLLBAR_ACCESS_TOKEN"
+    drone secret add kradalby/hugin --name hugin_mapbox_access_token --data "$HUGIN_MAPBOX_ACCESS_TOKEN"
+
 fi
