@@ -22,6 +22,8 @@ local env_secret_dict = {
           build_args_from_env: std.objectFields(env_secret_dict),
         },
       },
+      fap.step.extract_from_container(name='kradalby/hugin', container_path='usr/share/nginx/html'),
+      fap.step.deploy_builds(path='/storage/serve/builds/hugin'),
       fap.step.deploy_kubernetes('hugin'),
       fap.step.deploy_kubernetes('hugindemo', repo='kradalby/hugin') +
       {
@@ -44,4 +46,5 @@ local env_secret_dict = {
   fap.secret.discord.token,
   fap.secret.docker.username,
   fap.secret.docker.password,
+  fap.secret.ssh.deploy,
 ]

@@ -160,6 +160,18 @@ local fap = {
         key='password'
       ),
     },
+    github_pages_push: {
+      username: base.secret.new(
+        name='gh_username',
+        path='gh-pages-push',
+        key='username',
+      ),
+      token: base.secret.new(
+        name='gh_token',
+        path='gh-pages-push',
+        key='token'
+      ),
+    },
     vsphere: {
       server: base.secret.new(
         name='vsphere_server',
@@ -288,6 +300,17 @@ local fap = {
         ]
       ),
 
+    extract_from_container(name='', container_path='', image='kradalby/container-file-extractor:latest'):
+      step.new('Extract from container', image)
+      .withWhen(fap.when.master)
+      .withCommands(
+        [
+          'container-file-extractor "%s" "%s" "%s"' % [name, '${DRONE_COMMIT_SHA:0:8}', container_path],
+          'mkdir -p dist/',
+          'mv output/%s/* dist/.' % container_path,
+        ]
+      ),
+
     deploy_builds(path=''):
       step.new('Deploy to builds', 'appleboy/drone-scp')
       .withWhen(fap.when.master)
@@ -365,11 +388,17 @@ local fap = {
         repo: repo,
       }),
 
-    github_pages_publish(directory=''):
+    github_pages_publish(directory='dist'):
       step.new('Publish to GitHub Pages', 'plugins/gh-pages')
       .withWhen(fap.when.master)
       .withSettings({
         pages_directory: directory,
+        username: {
+          from_secret: 'gh_username',
+        },
+        password: {
+          from_secret: 'gh_token',
+        },
       }),
 
     terraform_lint:
