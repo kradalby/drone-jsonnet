@@ -7,7 +7,9 @@ local fap = drone.fap;
   pipeline.newKubernetes(
   ).withSteps(
     [
-      // fap.step.golint,
+      fap.step.prettier_lint,
+      fap.step.go_lint,
+      fap.step.go_test,
       fap.step.docker_build,
       fap.step.docker_publish('kradalby/metallb-neighbour-helper'),
       fap.step.discord,

@@ -10,7 +10,9 @@ local packages = ['libexif-dev', 'libiptcdata-dev'];
   pipeline.newKubernetes()
   .withSteps(
     [
-      // fap.step.golint,
+      fap.step.prettier_lint,
+      fap.step.swift_lint,
+      fap.step.swift_test(packages=[], image='kradalby/swift:groovy'),
       fap.step.swift_build(packages=[], image='kradalby/swift:groovy'),
       fap.step.discord,
     ]

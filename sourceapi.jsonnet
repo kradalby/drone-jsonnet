@@ -7,6 +7,8 @@ local fap = drone.fap;
   pipeline.newKubernetes(
   ).withSteps(
     [
+      fap.step.prettier_lint,
+      fap.step.python_lint,
       fap.step.tox,
       fap.step.docker_build,
       fap.step.docker_publish('kradalby/sourceapi'),

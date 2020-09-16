@@ -8,7 +8,6 @@ local fap = drone.fap;
   pipeline.newKubernetes()
   .withSteps(
     [
-      // fap.step.golint,
       fap.step.swift_build(packages=[]),
       fap.step.discord,
     ]

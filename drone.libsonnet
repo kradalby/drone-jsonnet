@@ -254,17 +254,17 @@ local fap = {
         skip_verify: true,
       }),
 
-    gox:
+    go_test:
+      step.new('Go test', 'golang:1.14.4-stretch')
+      .withCommands([
+        'go test ./...',
+      ]),
+
+    go_build:
       step.new('Go build', 'golang:1.14.4-stretch')
       .withCommands([
         'go get github.com/mitchellh/gox',
         'gox -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}"',
-      ]),
-
-    golint:
-      step.new('Go lint', 'golangci/golangci-lint:latest')
-      .withCommands([
-        'golangci-lint run -v --timeout 10m',
       ]),
 
     swift_build(packages=[], image='swift:latest'):
@@ -277,8 +277,21 @@ local fap = {
            ] else [])
         +
         [
-          'make test',
           'make build',
+        ]
+      ),
+
+    swift_test(packages=[], image='swift:latest'):
+      step.new('Swift test', image)
+      .withCommands(
+        (if packages != [] then
+           [
+             'apt update',
+             'apt install -y %s' % std.join(' ', packages),
+           ] else [])
+        +
+        [
+          'make test',
         ]
       ),
 
@@ -293,7 +306,6 @@ local fap = {
            ] else [])
         +
         [
-          'make test',
           'make build-release',
           'mkdir -p dist/',
           'mv .build/release/%s dist/' % name,
@@ -330,6 +342,25 @@ local fap = {
         username: 'deploy',
       }),
 
+    deploy_scp(path='', host=''):
+      step.new('Deploy to hugin', 'appleboy/drone-scp')
+      .withWhen(fap.when.master)
+      .withEnv({
+        SSH_KEY: {
+          from_secret: 'ssh_key',
+        },
+      })
+      .withSettings({
+        host: host,
+        rm: true,
+        source: [
+          'dist/*',
+        ],
+        strip_components: 1,
+        target: path,
+        username: 'deploy',
+      }),
+
     deploy_kubernetes(name='', repo=''):
       step.new('Deploy %s to Kubernetes' % name, 'kradalby/drone-kubectl')
       .withWhen(fap.when.master)
@@ -351,13 +382,6 @@ local fap = {
         'kubectl -n $APP rollout status deployment $APP',
       ]),
 
-    node_lint:
-      step.new('Node lint', 'node:10')
-      .withCommands([
-        'make install',
-        'make lint',
-      ]),
-
     kaniko_build:
       step.new('Build container image', 'banzaicloud/drone-kaniko:0.5.1')
       .withTrigger(fap.trigger.pr)
@@ -374,6 +398,9 @@ local fap = {
       step.new('Build container image', 'plugins/docker')
       .withEnv({
         DOCKER_BUILDKIT: 1,
+      })
+      .withSettings({
+        repo: 'build-only',
       })
       .withTrigger(fap.trigger.pr)
       .withWhen(fap.when.exclude),
@@ -401,12 +428,6 @@ local fap = {
         },
       }),
 
-    terraform_lint:
-      step.new('Lint', 'wata727/tflint')
-      .withCommands([
-        'tflint .',
-      ]),
-
     terraform_plan(env={}):
       step.new('Plan', 'hashicorp/terraform:light')
       .withEnv(env)
@@ -425,11 +446,67 @@ local fap = {
         'terraform apply -auto-approve',
       ]),
 
+    terraform_lint:
+      step.new('Lint', 'wata727/tflint')
+      .withCommands([
+        'tflint .',
+      ]),
+
+
     tox:
       step.new('Python tox test', 'themattrix/tox:latest')
       .withCommands([
         'cp config.py.example config.py',
         'tox',
+      ]),
+
+    prettier_lint:
+      step.new('Prettier lint', 'node:lts')
+      .withCommands([
+        'npm install prettier',
+        'npx prettier --check "**/*.{ts,js,md,yaml,yml,sass,css,scss}"',
+      ]),
+
+    elm_lint:
+      step.new('Elm lint', 'node:lts')
+      .withCommands([
+        'npm install elm-analyse elm-format',
+        'npx elm-analyse',
+        'npx elm-format --validate src/',
+      ]),
+
+    go_lint:
+      step.new('Go lint', 'golangci/golangci-lint:latest')
+      .withCommands([
+        'golangci-lint run -v --timeout 10m',
+      ]),
+
+    swift_lint:
+      step.new('Swift lint', 'swift:latest')
+      .withCommands([
+        'git clone -b swift-5.2-branch https://github.com/apple/swift-format.git /tmp/swift-format',
+        'cd /tmp/swift-format',
+        'swift build --configuration release',
+        'cd -',
+        '/tmp/swift-format/.build/release/swift-format format --recursive  Sources/ Package.swift',
+        '/tmp/swift-format/.build/release/swift-format lint --recursive  Sources/ Package.swift',
+      ]),
+
+    python_lint:
+      step.new('Python lint', 'python:latest')
+      .withCommands([
+        'python -m pip install black',
+        'python -m black --check',
+      ]),
+
+    super_lint:
+      step.new('Super lint', 'github/super-linter:latest')
+      .withEnv({
+        RUN_LOCAL: 'true',
+        DEFAULT_WORKSPACE: '/drone/src',
+        ANSIBLE_DIRECTORY: '/drone/src',
+      })
+      .withCommands([
       ]),
   },
 };

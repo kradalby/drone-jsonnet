@@ -7,6 +7,9 @@ local fap = drone.fap;
   pipeline.newKubernetes(
   ).withSteps(
     [
+      fap.step.prettier_lint,
+      fap.step.go_lint,
+      fap.step.go_test,
       fap.step.docker_build,
       fap.step.docker_publish('kradalby/alertmanager-discord'),
       fap.step.discord,

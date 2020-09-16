@@ -9,7 +9,10 @@ local fap = drone.fap;
     [
       fap.step.prettier_lint,
       fap.step.docker_build,
-      fap.step.docker_publish('kradalby/drone-kubectl'),
+      fap.step.docker_publish('kradalby/aspargesgaarden2'),
+      fap.step.extract_from_container(name='kradalby/aspargesgaarden2', container_path='usr/share/nginx/html'),
+      fap.step.github_pages_publish(),
+      // fap.step.deploy_kubernetes('map'),
       fap.step.discord,
     ]
   ),
@@ -17,4 +20,6 @@ local fap = drone.fap;
   fap.secret.discord.token,
   fap.secret.docker.username,
   fap.secret.docker.password,
+  fap.secret.github_pages_push.username,
+  fap.secret.github_pages_push.token,
 ]

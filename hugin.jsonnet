@@ -13,7 +13,8 @@ local env_secret_dict = {
   pipeline.newKubernetes(
   ).withSteps(
     [
-      fap.step.node_lint,
+      fap.step.prettier_lint,
+      fap.step.elm_lint,
       fap.step.kaniko_build,
       fap.step.kaniko_publish('kradalby/hugin') +
       {
@@ -24,21 +25,22 @@ local env_secret_dict = {
       },
       fap.step.extract_from_container(name='kradalby/hugin', container_path='usr/share/nginx/html'),
       fap.step.deploy_builds(path='/storage/serve/builds/hugin'),
+      fap.step.deploy_scp(path='/hugin/web', host='hugin.terra.fap.no'),
       fap.step.deploy_kubernetes('hugin'),
-      fap.step.deploy_kubernetes('hugindemo', repo='kradalby/hugin') +
-      {
-        environment+: {
-          KUBERNETES_CERT: {
-            from_secret: 'demo_kubernetes_cert',
-          },
-          KUBERNETES_SERVER: {
-            from_secret: 'demo_kubernetes_server',
-          },
-          KUBERNETES_token: {
-            from_secret: 'demo_kubernetes_token',
-          },
-        },
-      },
+      // fap.step.deploy_kubernetes('hugindemo', repo='kradalby/hugin') +
+      // {
+      //   environment+: {
+      //     KUBERNETES_CERT: {
+      //       from_secret: 'demo_kubernetes_cert',
+      //     },
+      //     KUBERNETES_SERVER: {
+      //       from_secret: 'demo_kubernetes_server',
+      //     },
+      //     KUBERNETES_token: {
+      //       from_secret: 'demo_kubernetes_token',
+      //     },
+      //   },
+      // },
       fap.step.discord,
     ]
   ),

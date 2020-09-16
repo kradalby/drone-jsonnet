@@ -7,6 +7,7 @@ local fap = drone.fap;
   pipeline.newKubernetes(
   ).withSteps(
     [
+      fap.step.prettier_lint,
       pipeline.step.new('Build', 'ubuntu:latest')
       .withEnv({
         DEBIAN_FRONTEND: 'noninteractive',

@@ -7,6 +7,7 @@ local fap = drone.fap;
   pipeline.newKubernetes(
   ).withSteps(
     [
+      fap.step.prettier_lint,
       fap.step.docker_build,
       fap.step.docker_publish('kradalby/webpage'),
       fap.step.deploy_kubernetes('webpage'),
