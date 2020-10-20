@@ -12,6 +12,8 @@ local MACOS_PATH = [
   '/usr/local/share/dotnet',
 ];
 
+local dnsConfig = { nameservers: ['1.1.1.1', '1.0.0.1'] };
+
 local base = {
   platform(os, arch): {
     os: os,
@@ -39,7 +41,7 @@ local base = {
   },
   pipeline:: {
     new():: self.withKind('pipeline'),
-    newKubernetes(name='Kubernetes', nodeSelector={ drone: true },):: self.new().withType('kubernetes').withName(name).withNodeSelector(nodeSelector),
+    newKubernetes(name='Kubernetes', nodeSelector={ drone: true },):: self.new().withType('kubernetes').withName(name).withNodeSelector(nodeSelector).withDnsConfig(dnsConfig),
     newMacOS(name='macOS'):: self.new().withType('exec').withName(name).withPlatform(base.platform('darwin', 'amd64')),
     newVmwarePacker(name='VMware Packer'):: self.new().withType('exec').withName(name).withPlatform(base.platform('linux', 'amd64')).withNode({ packer: true, vmware: true }),
     withName(name):: self + { name: name },
@@ -47,7 +49,9 @@ local base = {
     withType(type):: self + { type: type },
     withPlatform(platform):: self + { platform: platform },
     withNode(n):: self + { node: n },
+    withDependsOn(n):: self + { depends_on: n },
     withNodeSelector(ns):: self + { node_selector: ns },
+    withDnsConfig(c):: self + { dns_config: c },
     withSteps(steps):: self + if std.type(steps) == 'array' then { steps: steps } else { steps: [steps] },
     step:: {
       new(name='', image=''):: self.withName(name).withImage(image).withAlwaysPull(),
@@ -83,6 +87,7 @@ local step = pipeline.step;
 local dockerCommonSettings = {
   tags: [
     'latest',
+    'latest-${DRONE_STAGE_OS}-${DRONE_STAGE_ARCH}',
     '${DRONE_COMMIT_SHA:0:8}',
   ],
   username: {
@@ -255,13 +260,13 @@ local fap = {
       }),
 
     go_test:
-      step.new('Go test', 'golang:1.14.4-stretch')
+      step.new('Go test', 'golang:1.15-buster')
       .withCommands([
         'go test ./...',
       ]),
 
     go_build:
-      step.new('Go build', 'golang:1.14.4-stretch')
+      step.new('Go build', 'golang:1.15-buster')
       .withCommands([
         'go get github.com/mitchellh/gox',
         'gox -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}"',
@@ -415,6 +420,16 @@ local fap = {
         repo: repo,
       }),
 
+    docker_manifest(repo='', platforms=[]):
+      step.new('Publish manifests %s' % repo, 'plugins/manifest')
+      .withWhen(fap.when.master)
+      .withSettings(dockerCommonSettings {
+        template: '%s:latest-OS-ARCH' % repo,
+        target: repo,
+        platforms: platforms,
+        ignore_missing: true,
+      }),
+
     github_pages_publish(directory='dist'):
       step.new('Publish to GitHub Pages', 'plugins/gh-pages')
       .withWhen(fap.when.master)
@@ -476,10 +491,15 @@ local fap = {
       ]),
 
     go_lint:
-      step.new('Go lint', 'golangci/golangci-lint:latest')
+      step.new('Go lint', 'golang:1.15-buster')
       .withCommands([
+        'curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin',
         'golangci-lint run -v --timeout 10m',
       ]),
+    // step.new('Go lint', 'golangci/golangci-lint:latest')
+    // .withCommands([
+    //   'golangci-lint run -v --timeout 10m',
+    // ]),
 
     swift_lint:
       step.new('Swift lint', 'swift:latest')
