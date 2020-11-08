@@ -41,9 +41,27 @@ local base = {
   },
   pipeline:: {
     new():: self.withKind('pipeline'),
-    newKubernetes(name='Kubernetes', nodeSelector={ drone: true },):: self.new().withType('kubernetes').withName(name).withNodeSelector(nodeSelector).withDnsConfig(dnsConfig),
-    newMacOS(name='macOS'):: self.new().withType('exec').withName(name).withPlatform(base.platform('darwin', 'amd64')),
-    newVmwarePacker(name='VMware Packer'):: self.new().withType('exec').withName(name).withPlatform(base.platform('linux', 'amd64')).withNode({ packer: true, vmware: true }),
+    newKubernetes(
+      name='Kubernetes',
+      nodeSelector={ drone: true },
+    ):: self.new().withType('kubernetes')
+        .withName(name)
+        .withNodeSelector(nodeSelector)
+        .withDnsConfig(dnsConfig)
+        .withPlatform(base.platform('linux', 'amd64')),
+    newMacOS(
+      name='macOS'
+    ):: self.new()
+        .withType('exec')
+        .withName(name)
+        .withPlatform(base.platform('darwin', 'amd64')),
+    newVmwarePacker(
+      name='VMware Packer'
+    ):: self.new()
+        .withType('exec')
+        .withName(name)
+        .withPlatform(base.platform('linux', 'amd64'))
+        .withNode({ packer: true, vmware: true }),
     withName(name):: self + { name: name },
     withKind(kind):: self + { kind: kind },
     withType(type):: self + { type: type },
@@ -269,7 +287,7 @@ local fap = {
       step.new('Go build', 'golang:1.15-buster')
       .withCommands([
         'go get github.com/mitchellh/gox',
-        'gox -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}"',
+        'gox -osarch "!darwin/386" -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}"',
       ]),
 
     swift_build(packages=[], image='swift:latest'):
@@ -476,14 +494,14 @@ local fap = {
       ]),
 
     prettier_lint:
-      step.new('Prettier lint', 'node:lts')
+      step.new('Prettier lint', 'node:lts-buster')
       .withCommands([
         'npm install prettier',
         'npx prettier --check "**/*.{ts,js,md,yaml,yml,sass,css,scss}"',
       ]),
 
     elm_lint:
-      step.new('Elm lint', 'node:lts')
+      step.new('Elm lint', 'node:lts-buster')
       .withCommands([
         'npm install elm-analyse elm-format',
         'npx elm-analyse',
@@ -504,7 +522,7 @@ local fap = {
     swift_lint:
       step.new('Swift lint', 'swift:latest')
       .withCommands([
-        'git clone -b swift-5.2-branch https://github.com/apple/swift-format.git /tmp/swift-format',
+        'git clone -b swift-5.3-branch https://github.com/apple/swift-format.git /tmp/swift-format',
         'cd /tmp/swift-format',
         'swift build --configuration release',
         'cd -',
