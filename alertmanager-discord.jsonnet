@@ -17,6 +17,7 @@ local platforms = [
     name=platform.arch,
   )
   .withPlatform(platform)
+  .withNodeSelector(base.platformToNodeSelector(platform))
   .withSteps(
     [
       fap.step.prettier_lint,

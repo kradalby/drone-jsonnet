@@ -19,6 +19,11 @@ local base = {
     os: os,
     arch: arch,
   },
+  platformToNodeSelector(platform): {
+    'kubernetes.io/arch': platform.arch,
+    'kubernetes.io/os': platform.os,
+    drone: true,
+  },
   env_from_secret(dict): {
     [key]: {
       from_secret: dict[key],
