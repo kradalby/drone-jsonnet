@@ -28,7 +28,7 @@ local packages = ['libexif-dev', 'libgd-dev', 'libiptcdata0-dev', 'libsqlite3-de
       fap.step.swift_release(packages=packages,
                              name='munin',
                              image='kradalby/swift:groovy'),
-      fap.step.deploy_builds('/storage/serve/builds/munin/linux_x64'),
+      fap.step.deploy_scp(path='/fastest/serve/builds/munin/linux_x64', host='core.terra.fap.no'),
       fap.step.discord,
     ]
   ),
@@ -88,6 +88,4 @@ local packages = ['libexif-dev', 'libgd-dev', 'libiptcdata0-dev', 'libsqlite3-de
 // .withWhen(fap.when.master),
 // ]
 // ),
-
-
 

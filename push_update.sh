@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eux pipefail
+# set -eux pipefail
 
 DRONE_JSONNET_DIR=$(pwd)
 GIT_DIR="$HOME/git"

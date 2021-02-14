@@ -24,9 +24,8 @@ local env_secret_dict = {
         },
       },
       fap.step.extract_from_container(name='kradalby/hugin', container_path='usr/share/nginx/html'),
-      fap.step.deploy_builds(path='/storage/serve/builds/hugin'),
-      fap.step.deploy_scp(path='/hugin/web', host='hugin.terra.fap.no'),
-      fap.step.deploy_kubernetes('hugin'),
+      fap.step.deploy_scp(path='/fastest/serve/hugin', host='core.terra.fap.no'),
+      // fap.step.deploy_kubernetes('hugin'),
       // fap.step.deploy_kubernetes('hugindemo', repo='kradalby/hugin') +
       // {
       //   environment+: {

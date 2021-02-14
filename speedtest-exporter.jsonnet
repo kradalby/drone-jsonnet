@@ -5,7 +5,7 @@ local fap = drone.fap;
 
 local platforms = [
   base.platform('linux', 'amd64'),
-  base.platform('linux', 'arm64'),
+  // base.platform('linux', 'arm64'),
 ];
 
 // nodeSelector={

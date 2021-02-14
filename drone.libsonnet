@@ -351,27 +351,8 @@ local fap = {
         ]
       ),
 
-    deploy_builds(path=''):
-      step.new('Deploy to builds', 'appleboy/drone-scp')
-      .withWhen(fap.when.master)
-      .withEnv({
-        SSH_KEY: {
-          from_secret: 'ssh_key',
-        },
-      })
-      .withSettings({
-        host: 'storage.terra.fap.no',
-        rm: true,
-        source: [
-          'dist/*',
-        ],
-        strip_components: 1,
-        target: path,
-        username: 'deploy',
-      }),
-
     deploy_scp(path='', host=''):
-      step.new('Deploy to hugin', 'appleboy/drone-scp')
+      step.new('Deploy with scp', 'appleboy/drone-scp')
       .withWhen(fap.when.master)
       .withEnv({
         SSH_KEY: {
@@ -459,10 +440,10 @@ local fap = {
       .withSettings({
         pages_directory: directory,
         username: {
-          from_secret: 'gh_username',
+          from_secret: 'github_pages_push_user',
         },
         password: {
-          from_secret: 'gh_token',
+          from_secret: 'github_pages_push_token',
         },
       }),
 
