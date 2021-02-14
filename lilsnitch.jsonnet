@@ -9,7 +9,7 @@ local fap = drone.fap;
     [
       fap.step.docker_build,
       fap.step.docker_publish('kradalby/lilsnitch'),
-      fap.step.deploy_kubernetes('lilsnitch'),
+      // fap.step.deploy_kubernetes('lilsnitch'),
       fap.step.discord,
     ]
   ),

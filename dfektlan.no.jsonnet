@@ -12,7 +12,7 @@ local fap = drone.fap;
       fap.step.docker_publish('kradalby/dfektlan'),
       fap.step.extract_from_container(name='kradalby/dfektlan', container_path='usr/share/nginx/html'),
       fap.step.github_pages_publish(),
-      fap.step.deploy_kubernetes('dfektlan'),
+      // fap.step.deploy_kubernetes('dfektlan'),
       fap.step.discord,
     ]
   ),

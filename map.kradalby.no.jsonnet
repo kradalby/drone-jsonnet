@@ -12,7 +12,7 @@ local fap = drone.fap;
       fap.step.docker_publish('kradalby/map'),
       fap.step.extract_from_container(name='kradalby/map', container_path='usr/share/nginx/html'),
       fap.step.github_pages_publish(),
-      fap.step.deploy_kubernetes('map'),
+      // fap.step.deploy_kubernetes('map'),
       fap.step.discord,
     ]
   ),
