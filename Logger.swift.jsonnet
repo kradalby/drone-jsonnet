@@ -12,7 +12,4 @@ local fap = drone.fap;
       fap.step.discord,
     ]
   ),
-  fap.secret.discord.id,
-  fap.secret.discord.token,
-  fap.secret.ssh.deploy,
 ]

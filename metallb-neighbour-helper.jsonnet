@@ -15,8 +15,4 @@ local fap = drone.fap;
       fap.step.discord,
     ]
   ),
-  fap.secret.discord.id,
-  fap.secret.discord.token,
-  fap.secret.docker.username,
-  fap.secret.docker.password,
 ]

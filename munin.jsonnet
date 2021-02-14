@@ -32,11 +32,6 @@ local packages = ['libexif-dev', 'libgd-dev', 'libiptcdata0-dev', 'libsqlite3-de
       fap.step.discord,
     ]
   ),
-  fap.secret.discord.id,
-  fap.secret.discord.token,
-  fap.secret.docker.username,
-  fap.secret.docker.password,
-  fap.secret.ssh.deploy,
 ]
 // pipeline.newMacOS()
 // .withSteps(

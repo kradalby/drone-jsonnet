@@ -38,8 +38,4 @@ local platforms = [
       for p in platforms
     ],),
   ]).withDependsOn([p.arch for p in platforms]),
-  fap.secret.discord.id,
-  fap.secret.discord.token,
-  fap.secret.docker.username,
-  fap.secret.docker.password,
 ]

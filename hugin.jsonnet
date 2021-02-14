@@ -43,9 +43,4 @@ local env_secret_dict = {
       fap.step.discord,
     ]
   ),
-  fap.secret.discord.id,
-  fap.secret.discord.token,
-  fap.secret.docker.username,
-  fap.secret.docker.password,
-  fap.secret.ssh.deploy,
 ]
