@@ -52,7 +52,7 @@ local base = {
     ):: self.new().withType('kubernetes')
         .withName(name)
         .withNodeSelector(nodeSelector)
-        .withDnsConfig(dnsConfig)
+        // .withDnsConfig(dnsConfig)
         .withPlatform(base.platform('linux', 'amd64')),
     newMacOS(
       name='macOS'

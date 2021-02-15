@@ -83,4 +83,3 @@ local packages = ['libexif-dev', 'libgd-dev', 'libiptcdata0-dev', 'libsqlite3-de
 // .withWhen(fap.when.master),
 // ]
 // ),
-
