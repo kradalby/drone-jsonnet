@@ -283,13 +283,13 @@ local fap = {
       }),
 
     go_test:
-      step.new('Go test', 'golang:1.15-buster')
+      step.new('Go test', 'golang:1.16-buster')
       .withCommands([
         'go test ./...',
       ]),
 
     go_build:
-      step.new('Go build', 'golang:1.15-buster')
+      step.new('Go build', 'golang:1.16-buster')
       .withCommands([
         'go get github.com/mitchellh/gox',
         'gox -osarch "!darwin/386" -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}"',
@@ -370,6 +370,31 @@ local fap = {
         username: 'deploy',
       }),
 
+    deploy_rsync(
+      path='',
+      host='core.terra.fap.no',
+      source='dist/',
+      exclude=[],
+      include=[],
+      args=[]
+    ):
+      step.new('Deploy with rsync', 'drillster/drone-rsync')
+      .withWhen(fap.when.master)
+      .withSettings({
+        hosts: [host],
+        source: [
+          source,
+        ],
+        target: path,
+        include: include,
+        exclude: exclude,
+        args: std.join(' ', args),
+        user: 'deploy',
+        key: {
+          from_secret: 'ssh_key',
+        },
+      }),
+
     deploy_kubernetes(name='', repo=''):
       step.new('Deploy %s to Kubernetes' % name, 'kradalby/drone-kubectl')
       .withWhen(fap.when.master)
@@ -409,7 +434,8 @@ local fap = {
         DOCKER_BUILDKIT: 1,
       })
       .withSettings({
-        repo: 'build-only',
+        dry_run: true,
+        purge: true,
       })
       .withTrigger(fap.trigger.pr)
       .withWhen(fap.when.exclude),
@@ -422,6 +448,7 @@ local fap = {
       })
       .withSettings(dockerCommonSettings {
         repo: repo,
+        purge: true,
       }),
 
     docker_manifest(repo='', platforms=[]):
@@ -495,7 +522,7 @@ local fap = {
       ]),
 
     go_lint:
-      step.new('Go lint', 'golang:1.15-buster')
+      step.new('Go lint', 'golang:1.16-buster')
       .withCommands([
         'curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin',
         'golangci-lint run -v --timeout 10m',
