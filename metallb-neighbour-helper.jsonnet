@@ -12,7 +12,6 @@ local fap = drone.fap;
       fap.step.go_test,
       fap.step.docker_build,
       fap.step.docker_publish('kradalby/metallb-neighbour-helper'),
-      fap.step.discord,
     ]
   ),
 ]

@@ -12,7 +12,6 @@ local fap = drone.fap;
       fap.step.go_test,
       fap.step.go_build,
       fap.step.deploy_scp(path='/fastest/serve/builds/terraform-provider-opnsense', host='core.terra.fap.no'),
-      fap.step.discord,
     ]
   ),
 ]

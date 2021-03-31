@@ -4,7 +4,7 @@ local pipeline = base.pipeline;
 local step = pipeline.step;
 local fap = drone.fap;
 
-local packages = ['libexif-dev', 'libgd-dev', 'libiptcdata0-dev', 'libsqlite3-dev'];
+local packages = ['libexif-dev', 'libmagickwand-6.q16-dev', 'libiptcdata0-dev', 'libsqlite3-dev'];
 
 [
   pipeline.newKubernetes(name='Docker build')

@@ -434,6 +434,7 @@ local fap = {
         DOCKER_BUILDKIT: 1,
       })
       .withSettings({
+        repo: 'build-only',
         dry_run: true,
         purge: true,
       })
@@ -510,6 +511,7 @@ local fap = {
       step.new('Prettier lint', 'node:lts-buster')
       .withCommands([
         'npm install prettier',
+        'echo .pre-commit-config.yaml >> .prettierignore',
         'npx prettier --check "**/*.{ts,js,md,yaml,yml,sass,css,scss}"',
       ]),
 

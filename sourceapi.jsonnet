@@ -13,7 +13,6 @@ local fap = drone.fap;
       fap.step.docker_build,
       fap.step.docker_publish('kradalby/sourceapi'),
       fap.step.deploy_kubernetes('sourceapi'),
-      fap.step.discord,
     ]
   ),
 ]

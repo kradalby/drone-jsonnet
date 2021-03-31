@@ -26,7 +26,7 @@ local env_secret_dict = {
       fap.step.extract_from_container(name='kradalby/hugin', container_path='usr/share/nginx/html'),
       fap.step.deploy_rsync(
         path='/fastest/serve/hugin/',
-        exclude=['content', 'munin.json', '50x.html'],
+        exclude=['content', 'munin.json', '50x.html', 'people.json'],
         args=['--delete', '--omit-dir-times', '--no-perms'],
       ),
       // fap.step.deploy_kubernetes('hugin'),

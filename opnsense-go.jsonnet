@@ -11,8 +11,6 @@ local fap = drone.fap;
       fap.step.go_lint,
       fap.step.go_test,
       fap.step.go_build,
-      fap.step.email,
-      fap.step.discord,
     ]
   ),
 ]

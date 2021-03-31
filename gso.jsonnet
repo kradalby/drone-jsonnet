@@ -10,7 +10,6 @@ local fap = drone.fap;
       fap.step.docker_build,
       fap.step.docker_publish('kradalby/gso'),
       fap.step.deploy_kubernetes('gso'),
-      fap.step.discord,
     ]
   ),
 ]
