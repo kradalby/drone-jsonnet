@@ -18,7 +18,7 @@ local fap = drone.fap;
         'pwd',
         'echo $PATH',
         'apt update',
-        'apt install -y neovim git curl tar xz-utils',
+        'apt install -y neovim git curl tar xz-utils apt-transport-https wget',
         'curl -sL https://deb.nodesource.com/setup_10.x | bash -',
         'curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -',
         'echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list',
@@ -26,9 +26,12 @@ local fap = drone.fap;
         'apt install -y nodejs yarn',
 
         // Install VS Code',
-        'curl -o vscode.deb -J -L https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable',
+        'wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg',
+        'install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/',
+        'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list',
+        'apt update',
         'apt install -y libnotify4 libnss3 libxkbfile1 libsecret-1-0 libgtk-3-0 libxss1 libx11-xcb1 libasound2 libice6 libsm6 libxaw7 libxft2 libxmu6 libxpm4 libxt6 x11-apps xbitmaps',
-        'dpkg -i vscode.deb && rm -f vscode.deb',
+        'apt install -y code',
 
         'useradd -m ubuntu',
         'mkdir -p /home/ubuntu/git/dotfiles',

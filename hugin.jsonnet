@@ -15,8 +15,8 @@ local env_secret_dict = {
     [
       fap.step.prettier_lint,
       fap.step.elm_lint,
-      fap.step.kaniko_build,
-      fap.step.kaniko_publish('kradalby/hugin') +
+      fap.step.docker_build,
+      fap.step.docker_publish('kradalby/hugin') +
       {
         environment: base.env_from_secret(env_secret_dict),
         settings+: {
@@ -26,7 +26,7 @@ local env_secret_dict = {
       fap.step.extract_from_container(name='kradalby/hugin', container_path='usr/share/nginx/html'),
       fap.step.deploy_rsync(
         path='/fastest/serve/hugin/',
-        exclude=['content', 'munin.json', '50x.html', 'people.json'],
+        exclude=['content', 'munin.json', '50x.html', 'people.json', 'legacy_people.json'],
         args=['--delete', '--omit-dir-times', '--no-perms'],
       ),
       // fap.step.deploy_kubernetes('hugin'),

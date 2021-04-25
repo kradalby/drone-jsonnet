@@ -12,7 +12,6 @@ local packages = ['libexif-dev', 'libmagickwand-6.q16-dev', 'libiptcdata0-dev', 
     [
       fap.step.prettier_lint,
       fap.step.swift_lint,
-      fap.step.swift_test(packages=packages, image='kradalby/swift:groovy'),
       fap.step.docker_build,
       fap.step.docker_publish('kradalby/munin'),
       fap.step.discord,
