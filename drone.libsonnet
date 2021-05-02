@@ -535,9 +535,9 @@ local fap = {
     // ]),
 
     swift_lint:
-      step.new('Swift lint', 'swift:latest')
+      step.new('Swift lint', 'swift:5.4-bionic')
       .withCommands([
-        'git clone -b swift-5.3-branch https://github.com/apple/swift-format.git /tmp/swift-format',
+        'git clone -b swift-5.4-branch https://github.com/apple/swift-format.git /tmp/swift-format',
         'cd /tmp/swift-format',
         'swift build --configuration release',
         'cd -',
