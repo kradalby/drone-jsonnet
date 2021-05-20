@@ -236,7 +236,7 @@ local fap = {
   step:: {
     discord:
       step.new('Notify Discord', 'appleboy/drone-discord')
-      .withWhen(pipeline.when.withStatusAll())
+      .withWhen(pipeline.when.withStatusAll() + fap.when.master)
       .withSettings({
         webhook_id: {
           from_secret: 'discord_webhook_id',
@@ -512,7 +512,7 @@ local fap = {
       .withCommands([
         'npm install prettier',
         'echo .pre-commit-config.yaml >> .prettierignore',
-        'npx prettier --check "**/*.{ts,js,md,yaml,yml,sass,css,scss}"',
+        'npx prettier --check "**/*.{ts,js,md,yaml,yml,sass,css,scss,html,htm}"',
       ]),
 
     elm_lint:
@@ -535,14 +535,10 @@ local fap = {
     // ]),
 
     swift_lint:
-      step.new('Swift lint', 'swift:5.4-bionic')
+      step.new('Swift lint', 'kradalby/swift-format:5.4')
       .withCommands([
-        'git clone -b swift-5.4-branch https://github.com/apple/swift-format.git /tmp/swift-format',
-        'cd /tmp/swift-format',
-        'swift build --configuration release',
-        'cd -',
-        '/tmp/swift-format/.build/release/swift-format format --recursive  Sources/ Package.swift',
-        '/tmp/swift-format/.build/release/swift-format lint --recursive  Sources/ Package.swift',
+        'swift-format format --recursive  Sources/ Package.swift',
+        'swift-format lint --recursive  Sources/ Package.swift',
       ]),
 
     python_lint:
