@@ -220,12 +220,12 @@ local fap = {
   },
   trigger:: {
     local t = pipeline.trigger,
-    master: t.withBranch('master').withEvent('push'),
+    master: t.withBranch('master', 'main').withEvent('push'),
     pr: t.withEvent('pull_request'),
   },
   when:: {
     local w = pipeline.when,
-    master: w.withBranch('master').withEvent('push'),
+    master: w.withBranch(['master', 'main']).withEvent('push'),
     exclude: w.new() + { branch: { exclude: ['master'] } },
   },
   variables:: {
